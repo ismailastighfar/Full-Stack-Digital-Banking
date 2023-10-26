@@ -14,12 +14,18 @@ import com.me.ebanking.exceptions.CustomerNotFoundException;
 import com.me.ebanking.repositories.AccountOperationRepository;
 import com.me.ebanking.repositories.BankAccountRepository;
 import com.me.ebanking.repositories.CustomerRepository;
+import com.me.ebanking.security.entities.AppRole;
+import com.me.ebanking.security.entities.AppUser;
+import com.me.ebanking.security.services.ISecurityService;
 import com.me.ebanking.services.BankAccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -32,10 +38,27 @@ public class EBankingApplication {
         SpringApplication.run(EBankingApplication.class, args);
     }
 
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
-    CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
+    CommandLineRunner commandLineRunner(BankAccountService bankAccountService , ISecurityService iSecurityService){
         return args -> {
+            iSecurityService.addNewRole(new AppRole(null,"ADMIN"));
+            iSecurityService.addNewRole(new AppRole(null,"CUSTOMER"));
+
+            iSecurityService.addNewUser(new AppUser(null,"ismail","ismail@gmail.com","12345",new ArrayList<>()));
+            iSecurityService.addNewUser(new AppUser(null,"oumnia","oumnia@gmail.com","12345",new ArrayList<>()));
+            iSecurityService.addNewUser(new AppUser(null,"admin","admin@gmail.com","admin",new ArrayList<>()));
+
+
+            iSecurityService.addRoleToUser("CUSTOMER","ismail");
+            iSecurityService.addRoleToUser("CUSTOMER","oumnia");
+            iSecurityService.addRoleToUser("ADMIN","ismail");
+
+
             Stream.of("ismail","oumnia","ouassima").forEach(name->{
                 CustomerDTO customer=new CustomerDTO();
                 customer.setName(name);

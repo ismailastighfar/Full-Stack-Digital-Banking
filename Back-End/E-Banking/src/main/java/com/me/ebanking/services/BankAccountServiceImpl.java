@@ -2,6 +2,7 @@ package com.me.ebanking.services;
 
 import com.me.ebanking.dtos.*;
 import com.me.ebanking.entities.*;
+import com.me.ebanking.enums.AccountStatus;
 import com.me.ebanking.enums.OperationType;
 import com.me.ebanking.exceptions.BalanceNotSufficientException;
 import com.me.ebanking.exceptions.BankAccountNotFoundException;
@@ -195,5 +196,45 @@ public class BankAccountServiceImpl implements BankAccountService {
         List<Customer> customers=customerRepository.searchCustomer(keyword);
         List<CustomerDTO> customerDTOS = customers.stream().map(cust -> dtoMapper.fromCustomer(cust)).collect(Collectors.toList());
         return customerDTOS;
+    }
+
+    @Override
+    public BankAccountDTO updateBankAccount(String accountId, AccountStatus accountStatus) throws BankAccountNotFoundException {
+
+        BankAccount bankAccount = getBankAccountById(accountId);
+
+        if(bankAccount instanceof CurrentAccount) {
+            CurrentAccount currentAccount = (CurrentAccount) bankAccount;
+            currentAccount.setStatus(accountStatus);
+            CurrentAccount updatedCurrentAccount = bankAccountRepository.save(currentAccount);
+            return dtoMapper.fromCurrentBankAccount(updatedCurrentAccount);
+        } else {
+            SavingAccount savingAccount = (SavingAccount) bankAccount;
+            savingAccount.setStatus(accountStatus);
+            SavingAccount updatedSaveAccount = bankAccountRepository.save(savingAccount);
+            return dtoMapper.fromSavingBankAccount(updatedSaveAccount);
+        }
+    }
+
+    private BankAccount getBankAccountById(String accountId) throws BankAccountNotFoundException {
+        BankAccount bankAccount = bankAccountRepository.findById(accountId)
+                .orElseThrow(() -> new BankAccountNotFoundException("No Bank Account with this id: " + accountId ));
+        return bankAccount;
+    }
+
+    @Override
+    public List<BankAccountDTO> getBankAccountsByCustomerId(Long customerId) {
+        List<BankAccount> bankAccountList = bankAccountRepository.getBankAccountByCustomer_Id(customerId);
+        List<BankAccountDTO> bankAccountDTOS;
+
+        bankAccountDTOS = bankAccountList.stream().map(bankAccount -> {
+            if(bankAccount instanceof CurrentAccount) {
+                return dtoMapper.fromCurrentBankAccount((CurrentAccount) bankAccount);
+            } else {
+                return dtoMapper.fromSavingBankAccount((SavingAccount) bankAccount);
+            }
+        }).collect(Collectors.toList());
+
+        return bankAccountDTOS;
     }
 }

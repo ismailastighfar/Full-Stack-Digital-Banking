@@ -1,0 +1,90 @@
+<div class="container mt-3">
+  <div *ngIf="searchFormGroup">
+    <!--{{this.searchFormGroup.value | json}}-->
+    <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomer()">
+      <div class="input-group mb-3">
+        <input
+          formControlName="keyword"
+          type="text"
+          class="form-control"
+          placeholder="Search with a keyword"
+          aria-label="Search with a keyword"
+          aria-describedby="button"
+        />
+        <button class="btn btn-info" id="button" >
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+  <ng-container *ngIf="customers$ | async as listCustomers; else failureOrLoading">
+    <!--<ng-container *ngIf="customers$ | async as listCustomers; else failure">-->
+    <div class="card">
+      <div class="card-header"><h2>Customers</h2></div>
+      <div class="card-body">
+
+
+        <div *ngIf="errorDeleteMessage" class="text-center text-bg-danger">
+          {{errorDeleteMessage}}
+        </div>
+
+        <table class="table table-hover border-secondary" >
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+            <th>Accounts</th>
+            <th>Add Account</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let c of customers$ | async" >
+            <td>{{ c.id }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.email}}</td>
+            <td>
+              <button (click)="handleDeleteCustomer(c)" class="btn btn-md btn-danger">
+                <i class="bi bi-trash-fill text-white"></i>
+              </button>
+              <button (click)="handleUpdateCustomer(c)" class="btn btn-md btn-primary ms-2">
+                <i class="bi bi-pencil-fill text-white"></i>
+              </button>
+            </td>
+            <td>
+              <button (click)="handleCustomerAccounts(c)" class="btn btn-md btn-info">
+                <i class="bi bi-box-arrow-in-right text-white"></i>
+              </button>
+            </td>
+
+            <td>
+              <button (click)="handleAddNewAccount(c)" class="btn btn-md btn-success">
+                <i class="bi bi-plus-lg text-white "></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </ng-container>
+  <ng-template #failureOrLoading>
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="text-bg-danger text-center" >
+        {{ errorMessage }}
+      </div>
+    </ng-container>
+    <ng-template #loading>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-info" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+
+
+

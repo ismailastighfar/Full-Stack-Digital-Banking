@@ -1,0 +1,77 @@
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header" style="background-color: lightskyblue;">
+          <h2>Edit Profile</h2>
+        </div>
+        <div *ngIf="errorEditMessage" class="text-capitalize text-bg-danger text-center">
+          {{ errorEditMessage }}
+        </div>
+        <div class="card-body">
+          <div *ngIf="editFormGroup">
+            <form
+              [formGroup]="editFormGroup" (ngSubmit)="handleEditProfile()"
+            >
+              <div class="mb-3">
+                <input type="text" hidden formControlName="id" class="form-control">
+              </div>
+              <div class="input-group flex-nowrap mt-4">
+                <input
+                  formControlName="name"
+                  type="text"
+                  class="form-control"
+                  placeholder="Name"
+                  aria-label="Name"
+                  aria-describedby="addon-wrapping"
+                />
+              </div>
+              <p
+                *ngIf="editFormGroup.controls['name']?.touched
+                  && editFormGroup.controls['name']?.errors
+                   && editFormGroup.controls['name']?.errors!['required']"
+                class="text-danger"
+              >
+                Name is required
+              </p>
+              <div class="input-group flex-nowrap mt-4">
+                <input
+                  formControlName="email"
+                  type="email"
+                  class="form-control"
+                  placeholder="Email"
+                  aria-label="Email"
+                  aria-describedby="addon-wrapping"
+                />
+              </div>
+              <p
+                *ngIf="editFormGroup.controls['email']?.touched
+                  && editFormGroup.controls['email']?.errors
+                   && editFormGroup.controls['email']?.errors!['email']"
+                class="text-danger"
+              >
+                Enter a valid email (example@email.com)
+              </p>
+
+
+              <div
+                class="btn-group mt-4 ms-4"
+                role="group"
+                aria-label="Basic outlined example"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-outline-primary"
+                  [disabled]="!editFormGroup.valid"
+                >
+                  Edit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

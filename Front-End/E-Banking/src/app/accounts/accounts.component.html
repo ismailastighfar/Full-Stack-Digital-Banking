@@ -1,0 +1,155 @@
+<div class="container mt-2">
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="card">
+        <div class="card-header" style="background-color: lightgrey">Account</div>
+        <div class="card-body">
+          <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccountOperations()" class="mb-2">
+            <div class="input-group">
+              <label class="input-group-text">Account ID </label>
+              <input type="text" formControlName="accountId" class="form-control">
+              <button class="btn btn-info">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+
+
+          <ng-container *ngIf="accountOperations$ | async as accountDetails; else errorTemplate">
+            <div class="card mb-3 mt-2">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="mb-2">
+                    <label class="me-2"><b>Account ID : </b></label>
+                    <label>{{ accountDetails.accountId }}</label>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="mb-2">
+                    <label class="me-2"><b>Balance : </b></label>
+                    <label>{{ accountDetails.balance | number : '1.2-2'}}</label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <table class="table">
+              <thead>
+              <tr>
+                <th >ID</th>
+                <th >Date</th>
+                <th >Amount</th>
+                <th>Operation Type</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let op of accountDetails.accountOperationDTOList">
+                <td><b>{{op.id}}</b></td>
+                <td>{{op.operationDate | date : 'dd-MM-yyyy' }}</td>
+                <td class="text-start">{{op.amount | number : '1.2-2'}}</td>
+                <td><span
+                  class="badge rounded-pill"
+                  [ngClass]="
+                            op.operationType.includes('DEBIT')
+                              ? 'bg-danger'
+                              : 'bg-success'
+                          "
+                >{{ op.operationType }}</span></td>
+              </tr>
+              </tbody>
+            </table>
+            <ul class="nav nav-pills">
+              <li *ngFor="let item of [].constructor(accountDetails.totalPages); let page=index">
+                <a [ngClass]="page==currentPage?'btn-info':'btn-outline-info'" (click)="goToPage(page)"
+                   class="btn ms-1 mt-1">{{page}}</a>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #errorTemplate>
+            <ng-container *ngIf="errorAccountMessage">
+              <app-alert
+                [alertMessage]="'Account not found'"
+                [alertType]="0"
+              ></app-alert>
+
+            </ng-container>
+            <ng-template #loading>
+              <div class="d-flex justify-content-center">
+                <div class="spinner-border text-info" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col col-6">
+      <div class="card" *ngIf="accountOperations$ | async as accountDetails">
+        <div class="card-header" style="background-color: lightgrey" >Operations</div>
+        <div class="card-body">
+          <form
+            [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()"
+            method="post"
+          >
+            <fieldset class="mb-3">
+              <p>Select operation type</p>
+              <select class="form-select" formControlName="operationType">
+                <option value="DEBIT">DEBIT</option>
+                <option value="CREDIT">CREDIT</option>
+                <option value="TRANSFER">TRANSFER</option>
+              </select>
+            </fieldset>
+
+            <fieldset class="mb-3">
+              <p>Amount</p>
+              <div class="input-group">
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="amount"
+                />
+              </div>
+            </fieldset>
+
+            <fieldset
+              class="mb-3"
+              *ngIf="operationFormGroup.value.operationType == 'TRANSFER'"
+            >
+              <p>Account destination</p>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="accountTarget"
+                />
+
+              </div>
+            </fieldset>
+
+            <div
+              class="form-floating mb-3"
+              *ngIf="operationFormGroup.value.operationType != 'TRANSFER'"
+            >
+              <p>Description</p>
+              <textarea
+                class="form-control"
+                id="floatingTextareaa"
+                style="height: 100px"
+                formControlName="description"
+              ></textarea>
+
+            </div>
+
+            <div class="d-grid gap-2 mx-auto">
+              <button class="btn btn-info" type="submit">
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

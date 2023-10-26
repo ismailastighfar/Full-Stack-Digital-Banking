@@ -1,6 +1,7 @@
 package com.me.ebanking.services;
 
 import com.me.ebanking.dtos.*;
+import com.me.ebanking.enums.AccountStatus;
 import com.me.ebanking.exceptions.BalanceNotSufficientException;
 import com.me.ebanking.exceptions.BankAccountNotFoundException;
 import com.me.ebanking.exceptions.CustomerNotFoundException;
@@ -31,5 +32,9 @@ public interface BankAccountService {
     AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException;
 
     List<CustomerDTO> searchCustomers(String keyword);
+
+    BankAccountDTO updateBankAccount(String accountId, AccountStatus accountStatus) throws BankAccountNotFoundException;
+
+    List<BankAccountDTO> getBankAccountsByCustomerId(Long customerId);
 }
 

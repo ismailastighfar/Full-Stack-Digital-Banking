@@ -1,0 +1,42 @@
+<nav *ngIf="roles!=null" class="navbar navbar-expand-lg navbar-light bg-light text-bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" ><h2>Digital Banking</h2></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" *ngIf="roles!=null && roles.includes('ADMIN')" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bolder;">
+            Accounts Management
+          </a>
+          <ul class="dropdown-menu" *ngIf="roles!=null && roles.includes('ADMIN')"  aria-labelledby="navbarDropdown1">
+            <li><a class="dropdown-item" routerLink="/accounts">Search account</a></li>
+
+          </ul>
+
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" *ngIf="roles!=null && roles.includes('ADMIN')"  href="#" id="navbarDropdown" style="font-weight: bolder;" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Customers Management
+          </a>
+          <ul class="dropdown-menu" *ngIf="roles!=null && roles.includes('ADMIN')" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item"  routerLink="/customers">Customers</a></li>
+            <li><a class="dropdown-item"  routerLink="/new-customer">Add new Customer</a></li>
+          </ul>
+        </li>
+        <li class="nav-item" *ngIf="roles!=null && roles.includes('CUSTOMER')">
+          <a class="nav-link" routerLink="/edit-profil/{{customerId}}">Edit profile</a>
+        </li>
+        <li class="nav-item" *ngIf="roles!=null && roles.includes('CUSTOMER')">
+          <a class="nav-link" routerLink="/customer-accounts/{{customerId}}">My Accounts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="getAllBankAccounts()" *ngIf="roles!=null && roles.includes('ADMIN')" tabindex="-1" style="font-weight: bolder;">Bank Accounts</a>
+        </li>
+      </ul>
+      <button class="btn btn-danger" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+

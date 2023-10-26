@@ -1,0 +1,90 @@
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header" style="background-color: lightskyblue;">
+          <h2>Update customer</h2>
+        </div>
+        <div *ngIf="errorUpdateMessage" class="text-capitalize text-bg-danger text-center">
+          {{ errorUpdateMessage }}
+        </div>
+        <div class="card-body">
+          <div *ngIf="updateFormGroup">
+          <form
+            [formGroup]="updateFormGroup" (ngSubmit)="handleUpdateCustomer()"
+          >
+            <div class="mb-3">
+              <input type="text" hidden formControlName="id" class="form-control">
+            </div>
+            <div class="input-group flex-nowrap mt-4">
+              <input
+                formControlName="name"
+                type="text"
+                class="form-control"
+                placeholder="Name"
+                aria-label="Name"
+                aria-describedby="addon-wrapping"
+              />
+            </div>
+            <p
+              *ngIf="updateFormGroup.controls['name']?.touched
+                  && updateFormGroup.controls['name']?.errors
+                   && updateFormGroup.controls['name']?.errors!['required']"
+              class="text-danger"
+            >
+              Name is required
+            </p>
+            <div class="input-group flex-nowrap mt-4">
+              <input
+                formControlName="email"
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                aria-label="Email"
+                aria-describedby="addon-wrapping"
+              />
+            </div>
+            <p
+              *ngIf="updateFormGroup.controls['email']?.touched
+                  && updateFormGroup.controls['email']?.errors
+                   && updateFormGroup.controls['email']?.errors!['email']"
+              class="text-danger"
+            >
+              Enter a valid email (example@email.domain)
+            </p>
+
+            <div
+              class="btn-group mt-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <a
+                type="button"
+                class="btn btn-outline-info"
+                routerLink="/customers"
+              >
+                Back
+              </a>
+
+            </div>
+            <div
+              class="btn-group mt-4 ms-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <button
+                type="submit"
+                class="btn btn-outline-primary"
+                [disabled]="!updateFormGroup.valid"
+              >
+               Update
+              </button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

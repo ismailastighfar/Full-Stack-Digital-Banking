@@ -1,0 +1,59 @@
+<div class="container mx-auto mt-5">
+  <ng-container *ngIf="accounts$ | async as accountsByCustomer; else failureOrLoading">
+    <div class="card">
+      <div class="card-header"><h2>Accounts</h2></div>
+      <div class="card-body">
+        <table class="table table-bordered ">
+          <thead>
+          <tr>
+            <th>Account ID</th>
+            <th class="text-end">Balance</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Operations</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let account of accounts$ | async">
+            <td>{{account.id}}</td>
+            <td class="text-end">{{account.balance |  number : '1.2-2'}}</td>
+            <td>{{account.createdDate | date: 'dd-MM-yyyy'}}</td>
+            <td>{{account.status}}</td>
+            <td>
+          <span class="badge rounded-pill"
+                [ngClass]="account.type.includes('CurrentAccount') ? 'bg-success' : 'bg-danger'">
+           {{ account.type }}
+          </span>
+            </td>
+            <td>
+              <button (click)="Operations(account)" class="btn btn-info btn-sm">
+                All Operations
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="text-start text-capitalize text-info fs-4"><a routerLink="/customers" >
+      <i class="bi bi-arrow-left-square-fill"></i>
+    </a></div>
+  </ng-container>
+
+  <ng-template #failureOrLoading>
+    <ng-container *ngIf="errorMessage; else Loading">
+      <div class="text-center text-bg-danger">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <ng-template #Loading>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-info" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

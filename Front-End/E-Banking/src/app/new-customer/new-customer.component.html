@@ -1,0 +1,85 @@
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header" style="background-color: lightskyblue;">
+          <h2>Add new customer</h2>
+        </div>
+        <div *ngIf="errorMessage" class="text-capitalize text-bg-danger text-center">
+          {{ errorMessage }}
+        </div>
+        <div class="card-body">
+          <form
+            *ngIf="newCustomerFormGroup"
+            [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveNewCustomer()"
+          >
+            <div class="input-group flex-nowrap mt-4">
+              <input
+                formControlName="name"
+                type="text"
+                class="form-control"
+                placeholder="Name"
+                aria-label="Name"
+                aria-describedby="addon-wrapping"
+              />
+            </div>
+            <p
+              *ngIf="newCustomerFormGroup.controls['name']?.touched
+                  && newCustomerFormGroup.controls['name']?.errors
+                   && newCustomerFormGroup.controls['name']?.errors!['required']"
+              class="text-danger"
+            >
+              Name is required
+            </p>
+            <div class="input-group flex-nowrap mt-4">
+              <input
+                formControlName="email"
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                aria-label="Email"
+                aria-describedby="addon-wrapping"
+              />
+            </div>
+            <p
+              *ngIf="newCustomerFormGroup.controls['email']?.touched
+                  && newCustomerFormGroup.controls['email']?.errors
+                   && newCustomerFormGroup.controls['email']?.errors!['email']"
+              class="text-danger"
+            >
+              Enter a valid email (example@gmail.com)
+            </p>
+
+            <div
+              class="btn-group mt-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <a
+                type="button"
+                class="btn btn-outline-info"
+                routerLink="/customers"
+              >
+                Back
+              </a>
+
+            </div>
+            <div
+              class="btn-group mt-4 ms-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+            <button
+              type="submit"
+              class="btn btn-outline-primary"
+              [disabled]="!newCustomerFormGroup.valid"
+            >
+              Save
+            </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

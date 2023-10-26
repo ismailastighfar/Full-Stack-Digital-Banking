@@ -1,0 +1,103 @@
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header" style="background-color: lightskyblue;">
+          <h2>Add new Account</h2>
+        </div>
+        <div *ngIf="errorMessage" class="text-capitalize text-bg-danger text-center">
+          {{ errorMessage }}
+        </div>
+        <div class="card-body">
+          <form
+            *ngIf="newAccountFormGroup"
+            [formGroup]="newAccountFormGroup" (ngSubmit)="handleSaveNewAccount()"
+          >
+            <div class="row">
+              <fieldset class="mb-3">
+                <p>Select an account type</p>
+                <select class="form-select" formControlName="type">
+                  <option value="CurrentAccount">Current Account</option>
+                  <option value="SavingAccount">Saving Account</option>
+                </select>
+              </fieldset>
+
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Balance :</label>
+              <input type="number" formControlName="balance" class="form-control">
+              <span class="text-danger"
+                    *ngIf="newAccountFormGroup.controls['balance']?.touched
+                  && newAccountFormGroup.controls['balance']?.errors
+                   && newAccountFormGroup.controls['balance']?.errors!['required']">
+              Balance Is Required !
+            </span>
+            </div>
+            <!--*ngIf="accountType == 'CurrentAccount'"-->
+            <div class="mb-3" *ngIf="newAccountFormGroup.value.type == 'CurrentAccount'">
+              <label class="form-label">OverDraft :</label>
+              <input type="number" formControlName="overDraft" class="form-control">
+              <span class="text-danger"
+                    *ngIf="newAccountFormGroup.controls['overDraft']?.touched
+                  && newAccountFormGroup.controls['overDraft']?.errors
+                   && newAccountFormGroup.controls['overDraft']?.errors!['required']">
+              Over Draft Is Required
+            </span>
+            </div>
+            <div class="mb-3" *ngIf="newAccountFormGroup.value.type == 'SavingAccount'">
+              <label class="form-label">Interest Rate :</label>
+              <input type="number" formControlName="interestRate" class="form-control">
+              <span class="text-danger"
+                    *ngIf="newAccountFormGroup.controls['interestRate']?.touched
+                  && newAccountFormGroup.controls['interestRate']?.errors
+                   && newAccountFormGroup.controls['interestRate']?.errors!['required']">
+              Over Draft Is Required
+            </span>
+            </div>
+
+            <div
+              class="btn-group mt-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <a
+                type="button"
+                class="btn btn-outline-info"
+                routerLink="/customers"
+              >
+                Back
+              </a>
+
+            </div>
+            <div
+              class="btn-group mt-4 ms-4"
+              role="group"
+              aria-label="Basic outlined example"
+            >
+              <button
+                type="submit"
+                class="btn btn-outline-primary"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
